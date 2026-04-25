@@ -34,36 +34,11 @@ router.get("/downloads", requireLogin, requireWhitelist, async (req, res) => {
     .sort((a, b) => b.mtime - a.mtime) // newest first
     .slice(0, -2); // skip two oldest
 
-  res.send(`
-    <h1>World Downloads</h1>
-    <p>You are signed in as <strong>${req.session.user.name}</strong>. <a href="/logout">Logout</a></p>
-    <style>
-      table {
-        border: 2px solid black;
-        border-collapse: collapse;
-      }
-      th, td {
-        border: 1px solid #eeeeee;
-        padding: 8px;
-      }
-
-      tr:nth-child(even) {
-        background-color: #eeeeee;
-      }
-    </style>
-    <table>
-      <tr>
-        <th>Download</th>
-        <th>Size</th>
-      <tr>
-        ${allowedFiles
-          .map(
-            (file) =>
-              `<tr><td><a href="/downloads/${encodeURIComponent(file.name)}">${file.name}</a></td><td>${file.size}</td></tr>`,
-          )
-          .join("")}
-    </table>
-  `);
+  res.render("downloads", {
+    title: "Downloads",
+    username: req.session.user.name,
+    allowedFiles,
+  });
 });
 
 router.get(

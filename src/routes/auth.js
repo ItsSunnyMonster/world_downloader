@@ -9,11 +9,7 @@ router.get("/login", (req, res) => {
     return res.redirect("/downloads");
   }
 
-  res.send(`
-    <h1>Minecraft SMP Backups</h1>
-    <p>Log in to access world backups.</p>
-    <a href="/auth/microsoft">Login with Microsoft</a>
-  `);
+  res.render("login", { title: "Login" });
 });
 
 router.get("/auth/microsoft", (req, res) => {

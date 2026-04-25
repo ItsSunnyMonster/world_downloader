@@ -1,6 +1,7 @@
 import express from "express";
 import session from "express-session";
 import dotenv from "dotenv";
+import expressLayouts from "express-ejs-layouts";
 
 import downloadRoutes from "./routes/downloads.js";
 import authRoutes from "./routes/auth.js";
@@ -12,6 +13,10 @@ dotenv.config();
 const app = express();
 
 app.set("trust proxy", 1);
+app.use(expressLayouts);
+app.set("layout", "./layouts/layout.ejs");
+app.set("view engine", "ejs");
+app.set("views", "src/views");
 
 app.use(
   session({
@@ -28,6 +33,8 @@ app.use(
 
 app.use("/", downloadRoutes);
 app.use("/", authRoutes);
+
+app.use("/static", express.static("src/public"));
 
 app.get("/", requireLogin, requireWhitelist, (_, res) =>
   res.redirect("/downloads"),
