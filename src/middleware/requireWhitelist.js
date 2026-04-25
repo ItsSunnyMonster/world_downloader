@@ -10,9 +10,12 @@ export default async function requireWhitelist(req, res, next) {
   const allowed = await isWhitelisted(uuid);
 
   if (!allowed) {
-    return res.status(403).send(
-      '<p>You are not whitelisted! <a href="/logout">Click here</a> to log in with a different account.</p>', // TODO: Add link to log out
-    );
+    return res
+      .status(403)
+      .render("error", {
+        message: "You are not whitelisted!",
+        title: "Whitelist Error",
+      });
   }
 
   next();

@@ -35,19 +35,14 @@ router.get("/auth/microsoft", (req, res) => {
 });
 
 router.get("/auth/callback", async (req, res) => {
-  const { code, state, error, error_description } = req.query;
+  const { code, error, error_description } = req.query;
 
   if (error) {
     console.error("OAuth error:", error, error_description);
-    return res.status(400).send(`Login failed: ${error}\n${error_description}`);
-  }
-
-  if (!code) {
-    return res.status(400).send("No authorization code returned");
-  }
-
-  if (state !== req.session.oauthState) {
-    return res.status(400).send("State mismatch");
+    return res.status(400).render("error", {
+      message: `Login failed: ${error}\n${error_description}`,
+      title: "Login Error",
+    });
   }
 
   try {
@@ -131,11 +126,10 @@ router.get("/auth/callback", async (req, res) => {
     );
 
     if (!ownsJava) {
-      res
-        .status(403)
-        .send(
-          '<p>This account does not own Java Edition! <a href="/logout">Click here</a> to log in with a different account.</p>',
-        );
+      res.status(403).render("error", {
+        message: "This account does not own Java Edition!",
+        title: "Java Edition Missing",
+      });
     }
 
     const profile = await fetchJson(
@@ -163,7 +157,10 @@ router.get("/auth/callback", async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).send(`Authentication failed: ${err}`);
+    res.status(500).render("error", {
+      message: `Authentication failed: ${err}`,
+      title: "Authentication Error",
+    });
   }
 });
 
