@@ -21,11 +21,11 @@ router.get("/downloads", requireLogin, requireWhitelist, async (req, res) => {
           name: entry.name,
           mtime: stat.mtimeMs,
           size:
-            stat.size >= 1_073_741_824
-              ? `${Math.round((stat.size / 1_073_741_824) * 100) / 100}GiB`
-              : stat.size >= 1_048_576
-                ? `${Math.round((stat.size / 1_048_576) * 100) / 100}MiB`
-                : `${Math.round((stat.size / 1024) * 100) / 100}KiB`,
+            stat.size >= 1_000_000_000
+              ? `${Math.round((stat.size / 1_000_000_000) * 100) / 100}GB`
+              : stat.size >= 1_000_000
+                ? `${Math.round((stat.size / 1_000_000) * 100) / 100}MB`
+                : `${Math.round((stat.size / 1000) * 100) / 100}KB`,
         };
       }),
   );
