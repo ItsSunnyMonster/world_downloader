@@ -142,7 +142,7 @@
   color: white;
 }
 </style>
-<button id="dark-mode-toggle" class="theme-toggle" onclick="toggleTheme(); event.preventDefault();" href="#">
+<button id="dark-mode-toggle" class="theme-toggle" href="#">
       <svg class="sun-and-moon" aria-hidden="true" width="50" height="50" viewBox="0 0 24 24">
         <circle class="sun" cx="12" cy="12" r="6" mask="url(#moon-mask)" fill="currentColor"></circle>
         <g class="sun-beams" stroke="currentColor">
@@ -161,3 +161,9 @@
         </mask>
       </svg>
     </button>
+<script>
+    document.getElementById("dark-mode-toggle").addEventListener('click', (e) => {
+        toggleTheme();
+        e.preventDefault();
+    })
+</script>
