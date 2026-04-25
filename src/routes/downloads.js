@@ -6,7 +6,7 @@ import requireWhitelist from "../middleware/requireWhitelist.js";
 
 const router = express.Router();
 
-router.get("/downloads", requireLogin, requireWhitelist, async (_, res) => {
+router.get("/downloads", requireLogin, requireWhitelist, async (req, res) => {
   const entries = await fs.readdir(process.env.DOWNLOAD_DIR, {
     withFileTypes: true,
   });
@@ -36,6 +36,7 @@ router.get("/downloads", requireLogin, requireWhitelist, async (_, res) => {
 
   res.send(`
     <h1>World Downloads</h1>
+    <p>You are signed in as <strong>${req.session.user.name}</strong>. <a href="/logout">Logout</a></p>
     <style>
       table {
         border: 2px solid black;
@@ -70,15 +71,19 @@ router.get(
   requireLogin,
   requireWhitelist,
   async (req, res) => {
-    const filePath = path.join(DOWNLOAD_DIR, req.params.name);
+    const filePath = path.join(process.env.DOWNLOAD_DIR, req.params.name);
 
     // check the file is still allowed before sending it
-    const entries = await fs.readdir(DOWNLOAD_DIR, { withFileTypes: true });
+    const entries = await fs.readdir(process.env.DOWNLOAD_DIR, {
+      withFileTypes: true,
+    });
     const files = await Promise.all(
       entries
         .filter((e) => e.isFile())
         .map(async (e) => {
-          const stat = await fs.stat(path.join(DOWNLOAD_DIR, e.name));
+          const stat = await fs.stat(
+            path.join(process.env.DOWNLOAD_DIR, e.name),
+          );
           return { name: e.name, mtime: stat.mtimeMs };
         }),
     );
