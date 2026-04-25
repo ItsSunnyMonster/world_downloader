@@ -40,6 +40,10 @@ app.get("/", requireLogin, requireWhitelist, (_, res) =>
   res.redirect("/downloads"),
 );
 
+app.get("/{*splat}", (req, res) => {
+  res.status(404).render("404", { title: "404 Not Found", route: req.url });
+});
+
 app.listen(process.env.PORT, () => {
   console.log(`Server downloader listening on port ${process.env.PORT}`);
 });
