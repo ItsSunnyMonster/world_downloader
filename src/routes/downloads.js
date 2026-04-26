@@ -128,7 +128,7 @@ router.get("/download/:token/:filename", async (req, res) => {
       "Content-Type": "application/zip",
     });
 
-    fs.createReadStream(filepath, { start, end: chunkEnd }).pipe(res);
+    createReadStream(filepath, { start, end: chunkEnd }).pipe(res);
   } else {
     res.writeHead(200, {
       "Content-Length": fileSize,
