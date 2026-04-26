@@ -5,9 +5,9 @@ async function refreshDownloadLink(link) {
   link.dataset.inflight = "true";
   try {
     const filename = link.dataset.dlFilename;
-    const { url } = await fetch(`/api/download?file=${filename}`).then((r) =>
-      r.json(),
-    );
+    const { url } = await fetch(
+      `/api/download?file=${encodeURIComponent(filename)}`,
+    ).then((r) => r.json());
     link.href = url;
   } finally {
     delete link.dataset.inflight;
