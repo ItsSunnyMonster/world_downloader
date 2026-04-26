@@ -48,7 +48,7 @@ router.get(
   requireLogin,
   requireWhitelist,
   async (req, res) => {
-    const filename = req.query.file;
+    const filename = path.basename(req.query.file);
 
     // check the file is still allowed before sending it
     const entries = await fs.readdir(process.env.DOWNLOAD_DIR, {
@@ -79,7 +79,7 @@ router.get(
     }
 
     const token = createDownloadToken(filename, req.session.user.uuid);
-    res.json({ url: `/download/${token}/${filename}` });
+    res.json({ url: `/download/${token}/${encodeURIComponent(filename)}` });
   },
 );
 

@@ -64,6 +64,6 @@
         <th>Size</th>
     </tr>
     <% allowedFiles.map((file) => { %>
-        <tr><td style="text-align: left"><a href="#" data-dl-filename="<%=encodeURIComponent(file.name)%>"><%=file.name%></a></td><td><%=file.size%></td></tr>
+        <tr><td style="text-align: left"><a href="#" data-dl-filename="<%=file.name%>"><%=file.name%></a></td><td><%=file.size%></td></tr>
     <% }) %>
 </table>
