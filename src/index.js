@@ -1,14 +1,15 @@
+import dotenv from "dotenv";
+
+dotenv.config();
+
 import express from "express";
 import session from "express-session";
-import dotenv from "dotenv";
 import expressLayouts from "express-ejs-layouts";
 
 import downloadRoutes from "./routes/downloads.js";
 import authRoutes from "./routes/auth.js";
 import requireLogin from "./middleware/requireLogin.js";
 import requireWhitelist from "./middleware/requireWhitelist.js";
-
-dotenv.config();
 
 const app = express();
 

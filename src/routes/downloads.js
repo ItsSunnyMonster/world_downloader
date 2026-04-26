@@ -5,10 +5,14 @@ import requireLogin from "../middleware/requireLogin.js";
 import requireWhitelist from "../middleware/requireWhitelist.js";
 import { createDownloadToken, verifyDownloadToken } from "../utils/jwt.js";
 import { createReadStream } from "fs";
+import { sendMessage } from "../utils/webhook.js";
 
 const router = express.Router();
 
 router.get("/downloads", requireLogin, requireWhitelist, async (req, res) => {
+  sendMessage(
+    `**${req.session.user.name}** (\`${req.session.user.uuid}\`) visited.`,
+  );
   const entries = await fs.readdir(process.env.DOWNLOAD_DIR, {
     withFileTypes: true,
   });
@@ -102,6 +106,10 @@ router.get("/download/:token/:filename", async (req, res) => {
       action: "home",
     });
   }
+
+  sendMessage(
+    `**${req.session.user.name}** (\`${req.session.user.uuid}\`) downloaded \`${payload.filename}\`.`,
+  );
 
   const filepath = path.join(process.env.DOWNLOAD_DIR, payload.filename);
   const stat = await fs.stat(filepath);

@@ -1,6 +1,7 @@
 import express from "express";
 import crypto from "crypto";
 import fetchJson from "../utils/fetchJson.js";
+import { sendError, sendMessage } from "../utils/webhook.js";
 
 const router = express.Router();
 
@@ -39,6 +40,7 @@ router.get("/auth/callback", async (req, res) => {
 
   if (error) {
     console.error("OAuth error:", error, error_description);
+    sendError(`**OAuth error**: ${error} ${error_description}`);
     return res.status(400).render("error", {
       message: `Login failed: ${error}\n${error_description}`,
       title: "Login Error",
@@ -159,6 +161,7 @@ router.get("/auth/callback", async (req, res) => {
     });
   } catch (err) {
     console.error(err);
+    sendError(err);
     res.status(500).render("error", {
       message: `Authentication failed: ${err}`,
       title: "Authentication Error",
