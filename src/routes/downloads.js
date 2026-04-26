@@ -48,7 +48,7 @@ router.get(
   requireLogin,
   requireWhitelist,
   async (req, res) => {
-    const filename = path.basename(req.query.file);
+    const filename = req.query.file;
 
     // check the file is still allowed before sending it
     const entries = await fs.readdir(process.env.DOWNLOAD_DIR, {
