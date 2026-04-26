@@ -42,6 +42,7 @@ router.get("/auth/callback", async (req, res) => {
     return res.status(400).render("error", {
       message: `Login failed: ${error}\n${error_description}`,
       title: "Login Error",
+      action: "logout",
     });
   }
 
@@ -129,6 +130,7 @@ router.get("/auth/callback", async (req, res) => {
       res.status(403).render("error", {
         message: "This account does not own Java Edition!",
         title: "Java Edition Missing",
+        action: "logout",
       });
     }
 
@@ -160,6 +162,7 @@ router.get("/auth/callback", async (req, res) => {
     res.status(500).render("error", {
       message: `Authentication failed: ${err}`,
       title: "Authentication Error",
+      action: "logout",
     });
   }
 });

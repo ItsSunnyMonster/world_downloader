@@ -1,3 +1,7 @@
 <h1>Error</h1>
 <p><%= message _%></p>
+<% if (action === 'logout') { %>
 <a class="button" href="/logout">Login Again</a>
+<% } else if (action === 'home') { %>
+<a class="button" href="/">Go Home</a>
+<% } %>

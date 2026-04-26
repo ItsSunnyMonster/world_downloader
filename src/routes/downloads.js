@@ -71,9 +71,10 @@ router.get(
       .map((f) => f.name);
 
     if (!allowedNames.includes(req.query.file)) {
-      return res.status(404).render("404", {
+      return res.status(404).render("error", {
         title: "404 Not Found",
-        route: req.params.name,
+        message: `${req.query.file} is not available for download.`,
+        action: "home",
       });
     }
 
@@ -87,11 +88,19 @@ router.get("/download/:token/:filename", async (req, res) => {
   try {
     payload = verifyDownloadToken(req.params.token);
   } catch (err) {
-    return res.status(401).send("Download link is invalid or has expired.");
+    return res.status(401).render("error", {
+      title: "401 Unauthorized",
+      message: "Download link is invalid or has expired.",
+      action: "home",
+    });
   }
 
   if (payload.filename != req.params.filename) {
-    return res.status(400).send("File name does not match the download token.");
+    return res.status(400).render("error", {
+      title: "400 Bad Request",
+      message: "File name does not match the download token.",
+      action: "home",
+    });
   }
 
   const filepath = path.join(process.env.DOWNLOAD_DIR, payload.filename);
