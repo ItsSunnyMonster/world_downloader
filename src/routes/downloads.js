@@ -3,6 +3,8 @@ import fs from "fs/promises";
 import path from "path";
 import requireLogin from "../middleware/requireLogin.js";
 import requireWhitelist from "../middleware/requireWhitelist.js";
+import { createDownloadToken, verifyDownloadToken } from "../utils/jwt.js";
+import { createReadStream } from "fs";
 
 const router = express.Router();
 
@@ -42,11 +44,11 @@ router.get("/downloads", requireLogin, requireWhitelist, async (req, res) => {
 });
 
 router.get(
-  "/downloads/:name",
+  "/api/download",
   requireLogin,
   requireWhitelist,
   async (req, res) => {
-    const filePath = path.join(process.env.DOWNLOAD_DIR, req.params.name);
+    const filename = path.basename(req.query.file);
 
     // check the file is still allowed before sending it
     const entries = await fs.readdir(process.env.DOWNLOAD_DIR, {
@@ -68,12 +70,64 @@ router.get(
       .slice(2)
       .map((f) => f.name);
 
-    if (!allowedNames.includes(req.params.name)) {
-      return res.status(403).send("This file is not available for download.");
+    if (!allowedNames.includes(req.query.file)) {
+      return res.status(404).render("404", {
+        title: "404 Not Found",
+        route: req.params.name,
+      });
     }
 
-    res.download(filePath);
+    const token = createDownloadToken(filename, req.session.user.uuid);
+    res.json({ url: `/download/${token}/${filename}` });
   },
 );
+
+router.get("/download/:token/:filename", async (req, res) => {
+  let payload;
+  try {
+    payload = verifyDownloadToken(req.params.token);
+  } catch (err) {
+    return res.status(401).send("Download link is invalid or has expired.");
+  }
+
+  if (payload.filename != req.params.filename) {
+    return res.status(400).send("File name does not match the download token.");
+  }
+
+  const filepath = path.join(process.env.DOWNLOAD_DIR, payload.filename);
+  const stat = await fs.stat(filepath);
+  const fileSize = stat.size;
+  const range = req.headers.range;
+
+  res.setHeader("Accept-Ranges", "bytes");
+  res.setHeader(
+    "Content-Disposition",
+    `attachment; filename="${payload.filename}"`,
+  );
+
+  if (range) {
+    const [start, end] = range
+      .replace(/bytes=/, "")
+      .split("-")
+      .map(Number);
+    const chunkEnd = end || fileSize - 1;
+    const chunkSize = chunkEnd - start + 1;
+
+    res.writeHead(206, {
+      "Content-Range": `bytes ${start}-${chunkEnd}/${fileSize}`,
+      "Content-Length": chunkSize,
+      "Content-Type": "application/zip",
+    });
+
+    fs.createReadStream(filepath, { start, end: chunkEnd }).pipe(res);
+  } else {
+    res.writeHead(200, {
+      "Content-Length": fileSize,
+      "Content-Type": "application/zip",
+    });
+
+    createReadStream(filepath).pipe(res);
+  }
+});
 
 export default router;

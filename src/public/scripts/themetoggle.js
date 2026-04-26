@@ -6,7 +6,6 @@ function setTheme(mode) {
 //
 
 function toggleTheme() {
-  console.log("Toggle");
   if (localStorage.getItem("theme-storage") === "light") {
     setTheme("dark");
     updateItemToggleTheme();
@@ -17,7 +16,6 @@ function toggleTheme() {
 }
 
 function updateItemToggleTheme() {
-  console.log("Log");
   let mode = getSavedTheme();
 
   let htmlElement = document.querySelector("html");
@@ -33,7 +31,6 @@ function updateItemToggleTheme() {
 function getSavedTheme() {
   let currentTheme = localStorage.getItem("theme-storage");
   if (!currentTheme) {
-    console.log("Empty");
     if (
       window.matchMedia &&
       window.matchMedia("(prefers-color-scheme: dark)").matches

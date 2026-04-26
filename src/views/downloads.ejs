@@ -1,3 +1,4 @@
+<script src="/static/scripts/downloadLinks.js" defer></script>
 <style>
     table, th, tr, td, table a {
         transition: color 300ms ease-in-out, background-color 300ms ease-in-out, border 300ms ease-in-out;
@@ -40,11 +41,6 @@
         color: deepskyblue;
     }
 
-    .dark table a:visited {
-        transition: none;
-        color: mediumorchid;
-    }
-
     .dark table a:active {
         transition: none;
         color: pink;
@@ -58,7 +54,9 @@
 <h1>World Downloads</h1>
 <p>You are signed in as <strong><%= username _%></strong>. <a class="button logout" href="/logout">Logout</a></p>
 
-<p><strong>Note:</strong> be careful when downloading the latest file. If its size seems to be suspicious like 0KiB, it could mean the backup is being created right now and you will end up with an invalid archive.</p>
+<p>Right click the links to copy a direct download link to use in a download manager. These expire in 30 minutes.</p>
+
+<p style="font-style: italic"><strong>Note:</strong> be careful when downloading the latest file. If its size seems to be suspicious like 0KB, it could mean the backup is being created right now and you will end up with an invalid archive.</p>
 
 <table>
     <tr>
@@ -66,6 +64,6 @@
         <th>Size</th>
     </tr>
     <% allowedFiles.map((file) => { %>
-        <tr><td style="text-align: left"><a href="/downloads/<%=encodeURIComponent(file.name)%>"><%=file.name%></a></td><td><%=file.size%></td></tr>
+        <tr><td style="text-align: left"><a href="#" data-dl-filename="<%=encodeURIComponent(file.name)%>"><%=file.name%></a></td><td><%=file.size%></td></tr>
     <% }) %>
 </table>
