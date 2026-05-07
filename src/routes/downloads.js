@@ -108,7 +108,7 @@ router.get("/download/:token/:filename", async (req, res) => {
   }
 
   sendMessage(
-    `**${req.session.user.name || "Unknown"}** (\`${req.session.user.uuid || "Unknown"}\`) downloaded \`${payload.filename}\`.`,
+    `**${req.session.user?.name || "Unknown"}** (\`${req.session.user?.uuid || "Unknown"}\`) downloaded \`${payload.filename}\`.`,
   );
 
   const filepath = path.join(process.env.DOWNLOAD_DIR, payload.filename);
