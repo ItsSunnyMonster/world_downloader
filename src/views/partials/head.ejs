@@ -7,7 +7,9 @@
 </script>
     
 <style>
-<% const background = Math.floor(Math.random() * 15) + 1 %>
+<% const calcked_old = locals.old === undefined ? Math.floor(Math.random() * (15 + 9)) + 1 > 15 : locals.old %>
+<% const limit = calcked_old ? 9 : 15 %>
+<% const background = Math.floor(Math.random() * limit) + 1 %>
     @font-face {
         font-family: Minecraft; 
         src: url("/static/fonts/minecraft_regular.woff2") format('woff2');
@@ -72,13 +74,21 @@
     }
 
     #dark-background {
-        background-image: url("/static/backgrounds/<%- background %>_dark.webp");
+        <% if (calcked_old) { %>
+            background-image: url("/static/old_backgrounds/<%- background %>_dark.webp");
+        <% } else { %>
+            background-image: url("/static/backgrounds/<%- background %>_dark.webp");
+        <% } %>
         transition: opacity 300ms ease-in-out;
         opacity: 1;
     }
 
     #light-background {
-        background-image: url("/static/backgrounds/<%- background %>_light.webp");
+        <% if (calcked_old) { %>
+            background-image: url("/static/old_backgrounds/<%- background %>_light.webp");
+        <% } else { %>
+            background-image: url("/static/backgrounds/<%- background %>_light.webp");
+        <% } %>
         z-index: -1;
     }
 
@@ -121,6 +131,11 @@
 
     h1 {
         margin-top: 0;
+    }
+
+    a.logout {
+        font-size: 1rem;
+        margin-bottom: 1rem;
     }
 </style>
 

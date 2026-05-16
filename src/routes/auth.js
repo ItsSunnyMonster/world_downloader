@@ -1,16 +1,18 @@
 import express from "express";
 import crypto from "crypto";
 import fetchJson from "../utils/fetchJson.js";
-import { sendError, sendMessage } from "../utils/webhook.js";
+import { sendError } from "../utils/webhook.js";
 
 const router = express.Router();
 
 router.get("/login", (req, res) => {
   if (req.session.user) {
-    return res.redirect("/downloads");
+    return res.redirect("/nav");
   }
 
-  res.render("login", { title: "Login" });
+  res.render("login", {
+    title: "Login",
+  });
 });
 
 router.get("/auth/microsoft", (req, res) => {
@@ -157,7 +159,7 @@ router.get("/auth/callback", async (req, res) => {
       delete req.session.oauthState;
       delete req.session.oauthNonce;
 
-      res.redirect("/downloads");
+      res.redirect("/nav");
     });
   } catch (err) {
     console.error(err);

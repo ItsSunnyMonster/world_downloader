@@ -1,3 +1,4 @@
+<script>const OLD = <%= old _%>;</script>
 <script src="/static/scripts/downloadLinks.js" defer></script>
 <style>
     table, th, tr, td, table a {
@@ -45,18 +46,11 @@
         transition: none;
         color: pink;
     }
-
-    a.logout {
-        font-size: 1rem;
-        margin-bottom: 1rem;
-    }
 </style>
 <h1>World Downloads</h1>
 <p>You are signed in as <strong><%= username _%></strong>. <a class="button logout" href="/logout">Logout</a></p>
 
 <p>Right click the links to copy a direct download link to use in a download manager. These expire in 30 minutes.</p>
-
-<p style="font-style: italic"><strong>Note:</strong> be careful when downloading the latest file. If its size seems to be suspicious like 0KB, it could mean the backup is being created right now and you will end up with an invalid archive.</p>
 
 <table>
     <tr>

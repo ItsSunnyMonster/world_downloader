@@ -6,7 +6,9 @@ async function refreshDownloadLink(link) {
   try {
     const filename = link.dataset.dlFilename;
     const { url } = await fetch(
-      `/api/download?file=${encodeURIComponent(filename)}`,
+      OLD
+        ? `/api/old_download?file=${encodeURIComponent(filename)}`
+        : `/api/download?file=${encodeURIComponent(filename)}`,
     ).then((r) => r.json());
     link.href = url;
   } finally {

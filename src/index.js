@@ -8,6 +8,7 @@ import expressLayouts from "express-ejs-layouts";
 
 import downloadRoutes from "./routes/downloads.js";
 import authRoutes from "./routes/auth.js";
+import navRoute from "./routes/nav.js";
 import requireLogin from "./middleware/requireLogin.js";
 import requireWhitelist from "./middleware/requireWhitelist.js";
 
@@ -34,6 +35,7 @@ app.use(
 
 app.use("/", downloadRoutes);
 app.use("/", authRoutes);
+app.use("/", navRoute);
 
 app.use("/static", express.static("src/public"));
 
