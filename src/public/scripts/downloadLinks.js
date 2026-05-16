@@ -17,6 +17,6 @@ async function refreshDownloadLink(link) {
 }
 
 downloadLinks.forEach((link) => {
-  // refreshDownloadLink(link);
+  refreshDownloadLink(link);
   link.addEventListener("mouseenter", () => refreshDownloadLink(link));
 });

@@ -69,19 +69,14 @@ async function downloadApiRoute(req, res, directory, removeOldest) {
       }),
   );
 
-  const allowedNames = removeOldest
-    ? files
-        .sort((a, b) => a.mtime - b.mtime)
-        .slice(2)
-        .map((f) => f.name)
-    : files;
+  const allowedNames = (
+    removeOldest ? files.sort((a, b) => a.mtime - b.mtime).slice(2) : files
+  ).map((f) => f.name);
 
   if (!allowedNames.includes(req.query.file)) {
-    return res.status(404).render("error", {
-      title: "404 Not Found",
-      message: `${req.query.file} is not available for download.`,
-      action: "home",
-    });
+    return res
+      .status(404)
+      .json({ error: `${req.query.file} is not available for download.` });
   }
 
   const token = createDownloadToken(
