@@ -40,7 +40,7 @@ app.use("/", navRoute);
 app.use("/static", express.static("src/public"));
 
 app.get("/", requireLogin, requireWhitelist, (_, res) =>
-  res.redirect("/downloads"),
+  res.redirect("/nav"),
 );
 
 app.get("/{*splat}", (req, res) => {
